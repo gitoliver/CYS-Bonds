@@ -1,6 +1,7 @@
 #include <iostream>
-#include "/home/oliver/Programs/gems/gmml/includes/gmml.hpp"
-#include "io.h"
+//#include "/home/oliver/Programs/gems/gmml/includes/gmml.hpp"
+#include "gmml.hpp"
+#include "includes/io.h"
 
 using namespace MolecularModeling;
 
@@ -13,37 +14,44 @@ double GetDistanceToAtom(Atom *A, Atom *otherAtom);
 int main(int argc, char *argv[])
 {
     std::cout << "Hello World!" << std::endl;
+    if ( argc != 2 )
+    {
+        std::cout << "Usage: ./CYS_bonds pdb_file_name\n";
+        std::exit (EXIT_FAILURE);
+    }
     //************************************************//
     // Details for loading in a PDB file              //
     //************************************************//
-    std::string working_Directory = Find_Program_Working_Directory();
-    std::string installation_Directory = Find_Program_Installation_Directory();
-    std::string parameterDirectory = installation_Directory + "/CurrentParams";
+ //   std::string working_Directory = Find_Program_Working_Directory();
+//    std::string installation_Directory = Find_Program_Installation_Directory();
+//    std::string parameterDirectory = installation_Directory + "/CurrentParams";
 
-    std::vector<std::string> amino_libs, glycam_libs, other_libs, prep;
-    amino_libs.push_back(parameterDirectory + "/amino12.lib");
-    amino_libs.push_back(parameterDirectory + "/aminoct12.lib");
-    amino_libs.push_back(parameterDirectory + "/aminont12.lib");
+//    std::vector<std::string> amino_libs, glycam_libs, other_libs, prep;
+//    amino_libs.push_back(parameterDirectory + "/amino12.lib");
+//    amino_libs.push_back(parameterDirectory + "/aminoct12.lib");
+//    amino_libs.push_back(parameterDirectory + "/aminont12.lib");
 
-    glycam_libs.push_back(parameterDirectory + "/GLYCAM_amino_06j_12SB.lib");
-    glycam_libs.push_back(parameterDirectory + "/GLYCAM_aminoct_06j_12SB.lib");
-    glycam_libs.push_back(parameterDirectory + "/GLYCAM_aminont_06j_12SB.lib");
+//    glycam_libs.push_back(parameterDirectory + "/GLYCAM_amino_06j_12SB.lib");
+//    glycam_libs.push_back(parameterDirectory + "/GLYCAM_aminoct_06j_12SB.lib");
+//    glycam_libs.push_back(parameterDirectory + "/GLYCAM_aminont_06j_12SB.lib");
 
-    other_libs.push_back(parameterDirectory + "/nucleic12.lib");
-    other_libs.push_back(parameterDirectory + "/nucleic12.lib");
-    other_libs.push_back(parameterDirectory + "/solvents.lib");
+//    other_libs.push_back(parameterDirectory + "/nucleic12.lib");
+//    other_libs.push_back(parameterDirectory + "/nucleic12.lib");
+//    other_libs.push_back(parameterDirectory + "/solvents.lib");
 
-    prep.push_back(parameterDirectory + "/GLYCAM_06j-1.prep");
+//    prep.push_back(parameterDirectory + "/GLYCAM_06j-1.prep");
 
-    std::string parameter_file_path = parameterDirectory + "/GLYCAM_06j.dat";
-    //std::string ion_parameter_file_path = parameterDirectory + "/atomic_ions.lib";
+//    std::string parameter_file_path = parameterDirectory + "/GLYCAM_06j.dat";
+//    //std::string ion_parameter_file_path = parameterDirectory + "/atomic_ions.lib";
 
-    //************************************************//
-    // Load PDB file                                  //
-    //************************************************//
-    Assembly assembly;
-    assembly.BuildAssemblyFromPdbFile( argv[1], amino_libs, glycam_libs, other_libs, prep, parameter_file_path );
-    assembly.BuildStructureByDistance();
+//    //************************************************//
+//    // Load PDB file                                  //
+//    //************************************************//
+//    Assembly assembly;
+//    assembly.BuildAssemblyFromPdbFile( argv[1], amino_libs, glycam_libs, other_libs, prep, parameter_file_path );
+    Assembly assembly( (argv[1]), gmml::InputFileType::PDB);
+    assembly.BuildStructureByDistance(4, 1.6); // 4 threads, 1.91 cutoff to allow C-S in Cys and Met to be bonded. Nope that did bad things
+    //assembly.BuildStructureByDistance();
     AtomVector cys_atoms, all_SG_atoms;
     ResidueVector residues = assembly.GetAllResiduesOfAssembly();
     // want assembly.GetAllResiduesInSelection(name=CYS,name=CYX);

@@ -4,10 +4,12 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    io.cpp
+    io.cpp \
+    src/io.cpp
 
 HEADERS += \
-    io.h
+    io.h \
+    includes/io.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../gems/gmml/bin/release/ -lgmml
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../gems/gmml/bin/debug/ -lgmml
